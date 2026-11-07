@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melfis Flowers Samarqand - Premium Flower Shop</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0c10;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(22, 27, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card-hover:hover {
+            border-color: rgba(244, 114, 182, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(244, 114, 182, 0.15);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #f472b6 0%, #fb7185 50%, #f43f5e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-btn {
+            background: linear-gradient(135deg, #f472b6 0%, #e11d48 100%);
+        }
+        .story-ring {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            padding: 2.5px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hero-photo {
+            background-image: linear-gradient(90deg, rgba(11, 12, 16, 0.96) 0%, rgba(11, 12, 16, 0.72) 48%, rgba(11, 12, 16, 0.12) 100%), url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=85');
+            background-position: center;
+            background-size: cover;
+        }
+        .product-card[hidden] {
+            display: none;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative pb-12">
+
+    <!-- Anti-Gravity 3D Canvas Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Application Shell -->
+    <div class="relative z-10 max-w-7xl mx-auto min-h-screen bg-slate-950/80 border-x border-slate-800/50 shadow-2xl flex flex-col">
+        
+        <!-- Header / Instagram Profile Banner -->
+        <header class="p-5 border-b border-white/5 backdrop-blur-md bg-slate-900/60 z-30">
+            <nav class="max-w-6xl mx-auto flex items-center justify-between gap-4 mb-5">
+                <a href="#home" class="flex items-center gap-3">
+                    <img src="./melfis-logo.jpg" alt="" class="w-10 h-10 rounded-full object-cover">
+                    <span class="hidden sm:block text-sm font-bold tracking-wide text-white">MELFIS <span class="text-rose-400">FLOWERS</span></span>
+                </a>
+                <div class="hidden md:flex items-center gap-6 text-xs text-slate-300">
+                    <a href="#home" class="hover:text-rose-300 transition">Bosh sahifa</a>
+                    <a href="#catalog" class="hover:text-rose-300 transition">Guldastalar</a>
+                    <a href="#about" class="hover:text-rose-300 transition">Biz haqimizda</a>
+                    <a href="#faq" class="hover:text-rose-300 transition">Savollar</a>
+                    <a href="#contact" class="hover:text-rose-300 transition">Aloqa</a>
+                </div>
+                <a href="#catalog" class="gradient-btn px-4 py-2 rounded-xl text-xs font-semibold text-white">Buyurtma berish</a>
+            </nav>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
+                        samarqand.melfisflowers
+                        <i class="fa-solid fa-circle-check text-rose-500 text-xs"></i>
+                    </h1>
+                    <p class="text-xs text-rose-400 font-medium tracking-wide uppercase mt-0.5">Melfis Flowers Samarqand</p>
+                </div>
+                <button class="w-9 h-9 rounded-full bg-slate-800/80 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 transition">
+                    <i class="fa-regular fa-paper-plane text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Profile Info Section -->
+            <div class="mt-6 flex items-center gap-5">
+                <div class="relative">
+                    <div class="story-ring rounded-full">
+                        <div class="w-20 h-20 rounded-full bg-slate-900 border-2 border-slate-950 overflow-hidden flex items-center justify-center">
+                            <img src="./melfis-logo.jpg" alt="Melfis Flower Shop" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-3 gap-2 text-center">
+                    <div class="glass-card p-2 rounded-xl">
+                        <span class="block text-base font-bold text-white">28</span>
+                        <span class="text-[10px] text-slate-400 uppercase">Postlar</span>
+                    </div>
+                    <div class="glass-card p-2 rounded-xl">
+                        <span class="block text-base font-bold text-white">3.1k</span>
+                        <span class="text-[10px] text-slate-400 uppercase">Kuzatuvchi</span>
+                    </div>
+                    <div class="glass-card p-2 rounded-xl">
+                        <span class="block text-base font-bold text-white">24/7</span>
+                        <span class="text-[10px] text-slate-400 uppercase">Xizmat</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bio Details -->
+            <div class="mt-4 text-xs space-y-1 text-slate-300">
+                <p class="flex items-center gap-2"><i class="fa-solid fa-seedling text-rose-400 w-4"></i> Nafis va premium gullar ❤️</p>
+                <p class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-rose-400 w-4"></i> Buyurtma uchun 24/7</p>
+                <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-rose-400 w-4"></i> SAMARQAND Pavarot choraxasi</p>
+                <p class="flex items-center gap-2"><i class="fa-solid fa-phone text-rose-400 w-4"></i> +998 (70) 039-07-19</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mt-5 grid grid-cols-3 gap-3">
+                <a href="tel:+998700390719" class="gradient-btn py-2.5 rounded-xl font-semibold text-xs text-white shadow-lg shadow-rose-500/20 text-center flex items-center justify-center gap-2 hover:opacity-95 transition">
+                    <i class="fa-solid fa-phone"></i> Qo'ng'iroq
+                </a>
+                <a href="https://t.me/Melfis_flowers" target="_blank" class="glass-card py-2.5 rounded-xl font-semibold text-xs text-slate-200 border border-white/10 hover:bg-white/10 transition text-center flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-telegram text-sky-400"></i> Telegram
+                </a>
+                <a href="https://instagram.com/samarqand.melfisflowers" target="_blank" class="glass-card py-2.5 rounded-xl font-semibold text-xs text-slate-200 border border-white/10 hover:bg-white/10 transition text-center flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-instagram text-pink-400"></i> Instagram
+                </a>
+            </div>
+
+            <!-- Stories Highlights -->
+            <div class="mt-6 flex items-center gap-4 overflow-x-auto hide-scrollbar pb-1">
+                <div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer">
+                    <div class="w-14 h-14 rounded-full border border-rose-500/40 p-0.5 bg-slate-800">
+                        <div class="w-full h-full rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-heart text-rose-400 text-lg"></i>
+                        </div>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Kelin Guli</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer">
+                    <div class="w-14 h-14 rounded-full border border-rose-500/40 p-0.5 bg-slate-800">
+                        <div class="w-full h-full rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-star text-amber-400 text-lg"></i>
+                        </div>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Izohlar</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer">
+                    <div class="w-14 h-14 rounded-full border border-rose-500/40 p-0.5 bg-slate-800">
+                        <div class="w-full h-full rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-gift text-rose-400 text-lg"></i>
+                        </div>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Buketlar</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer">
+                    <div class="w-14 h-14 rounded-full border border-rose-500/40 p-0.5 bg-slate-800">
+                        <div class="w-full h-full rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-fire text-rose-500 text-lg"></i>
+                        </div>
+                    </div>
+                    <span class="text-[11px] text-slate-400">101 🌹</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-5 md:p-8 lg:p-10 space-y-10 max-w-6xl w-full mx-auto">
+            
+            <section id="home" class="hero-photo min-h-[360px] md:min-h-[480px] rounded-3xl overflow-hidden border border-white/10 flex items-center p-7 md:p-14">
+                <div class="max-w-xl">
+                    <span class="inline-flex items-center gap-2 rounded-full bg-rose-500/15 border border-rose-400/30 px-3 py-1.5 text-[10px] md:text-xs font-semibold tracking-wide text-rose-200">
+                        <i class="fa-solid fa-sparkles"></i> Samarqanddagi nafis gullar
+                    </span>
+                    <h2 class="serif-title text-4xl md:text-6xl font-semibold leading-tight text-white mt-5">Har bir lahzaga <span class="gradient-text">go‘zallik</span> qo‘shing</h2>
+                    <p class="text-sm md:text-base text-slate-300 leading-relaxed mt-4 max-w-md">Yaqinlaringiz uchun mehr bilan tayyorlangan premium guldastalar. Buyurtmangizni tanlang — biz eshigingizgacha yetkazamiz.</p>
+                    <div class="flex flex-wrap gap-3 mt-7">
+                        <a href="#catalog" class="gradient-btn px-5 py-3 rounded-xl text-sm font-semibold text-white shadow-lg shadow-rose-900/30">Guldastalarni ko‘rish <i class="fa-solid fa-arrow-right ml-2"></i></a>
+                        <a href="tel:+998700390719" class="glass-card px-5 py-3 rounded-xl text-sm font-semibold text-white"><i class="fa-solid fa-phone mr-2 text-rose-300"></i>Bizga qo‘ng‘iroq</a>
+                    </div>
+                    <div class="flex gap-6 mt-8 text-xs text-slate-300">
+                        <span><i class="fa-solid fa-heart text-rose-300 mr-1"></i> Mehr bilan tayyorlanadi</span>
+                        <span><i class="fa-solid fa-truck-fast text-rose-300 mr-1"></i> Tez yetkazish</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="glass-card rounded-2xl p-4"><i class="fa-solid fa-seedling text-rose-400"></i><h3 class="font-semibold text-sm text-white mt-3">Yangi gullar</h3><p class="text-[11px] text-slate-400 mt-1">Har kuni saralangan</p></div>
+                <div class="glass-card rounded-2xl p-4"><i class="fa-solid fa-truck-fast text-rose-400"></i><h3 class="font-semibold text-sm text-white mt-3">Yetkazib berish</h3><p class="text-[11px] text-slate-400 mt-1">Samarqand bo‘ylab</p></div>
+                <div class="glass-card rounded-2xl p-4"><i class="fa-solid fa-gift text-rose-400"></i><h3 class="font-semibold text-sm text-white mt-3">Sovg‘a qadoq</h3><p class="text-[11px] text-slate-400 mt-1">Did bilan bezatiladi</p></div>
+                <div class="glass-card rounded-2xl p-4"><i class="fa-solid fa-clock text-rose-400"></i><h3 class="font-semibold text-sm text-white mt-3">24/7 buyurtma</h3><p class="text-[11px] text-slate-400 mt-1">Har doim aloqadamiz</p></div>
+            </section>
+
+            <!-- Products Catalog Section -->
+            <section id="catalog" class="space-y-5">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-rose-400 mb-2">Bizning katalog</p>
+                        <h2 class="text-2xl md:text-3xl font-bold text-white serif-title">Sevimli guldastangizni tanlang</h2>
+                    </div>
+                    <label class="glass-card rounded-xl px-3 py-2 flex items-center gap-2 md:w-72">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                        <input id="productSearch" type="search" placeholder="Guldasta qidirish..." class="bg-transparent outline-none text-xs text-white w-full placeholder:text-slate-500">
+                    </label>
+                </div>
+
+                <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+                    <button class="category-filter shrink-0 rounded-full bg-rose-500 px-4 py-2 text-xs font-semibold text-white" data-category="all">Barchasi</button>
+                    <button class="category-filter shrink-0 glass-card rounded-full px-4 py-2 text-xs text-slate-300" data-category="roses">Atirgullar</button>
+                    <button class="category-filter shrink-0 glass-card rounded-full px-4 py-2 text-xs text-slate-300" data-category="bridal">Kelin guldastasi</button>
+                    <button class="category-filter shrink-0 glass-card rounded-full px-4 py-2 text-xs text-slate-300" data-category="gifts">Sovg‘a to‘plamlari</button>
+                </div>
+
+                <div id="productGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                    
+                    <!-- Item 1 -->
+                    <div class="product-card glass-card glass-card-hover rounded-2xl overflow-hidden transition-all duration-300 group" data-category="roses">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10"></div>
+                            <img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=600&q=80" alt="Rose Bouquet" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <span class="absolute top-2 right-2 z-20 bg-slate-900/80 backdrop-blur-md px-2 py-0.5 rounded-md text-[10px] font-bold text-rose-400 border border-rose-500/30">HIT</span>
+                        </div>
+                        <div class="p-3.5 space-y-2 relative z-20">
+                            <h3 class="text-sm font-semibold text-white group-hover:text-rose-300 transition">101 Atirgul Premium</h3>
+                            <p class="text-[11px] text-slate-400 line-clamp-1">Nafis qizil va pushti atirgullar</p>
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-xs font-bold text-rose-400">650,000 UZS</span>
+                                <button onclick="orderProduct('101 Atirgul Premium', '650,000 UZS')" class="w-7 h-7 rounded-lg gradient-btn flex items-center justify-center text-white shadow-md hover:scale-105 transition">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="product-card glass-card glass-card-hover rounded-2xl overflow-hidden transition-all duration-300 group" data-category="bridal">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10"></div>
+                            <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600&q=80" alt="Bride Flower" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        </div>
+                        <div class="p-3.5 space-y-2 relative z-20">
+                            <h3 class="text-sm font-semibold text-white group-hover:text-rose-300 transition">Kelin Guli Royale</h3>
+                            <p class="text-[11px] text-slate-400 line-clamp-1">Maxsus dizaynerlik guldastasi</p>
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-xs font-bold text-rose-400">450,000 UZS</span>
+                                <button onclick="orderProduct('Kelin Guli Royale', '450,000 UZS')" class="w-7 h-7 rounded-lg gradient-btn flex items-center justify-center text-white shadow-md hover:scale-105 transition">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="product-card glass-card glass-card-hover rounded-2xl overflow-hidden transition-all duration-300 group col-span-2 lg:col-span-1" data-category="gifts">
+                        <div class="h-44 bg-slate-800 relative overflow-hidden flex items-center justify-center">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10"></div>
+                            <img src="https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80" alt="Chocolates & Flowers" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-2 left-2 z-20 text-[10px] uppercase tracking-wider font-bold text-rose-400 bg-rose-950/80 px-2 py-0.5 rounded border border-rose-500/30">Melfischocoberry</span>
+                        </div>
+                        <div class="p-3.5 space-y-2 relative z-20">
+                            <h3 class="text-sm font-semibold text-white group-hover:text-rose-300 transition">Shokolad va Gullar Box</h3>
+                            <p class="text-[11px] text-slate-400 line-clamp-1">Shokolad va gullardan nafis sovg‘a to‘plami</p>
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-xs font-bold text-rose-400">550,000 UZS</span>
+                                <button onclick="orderProduct('Melfischocoberry Box', '550,000 UZS')" aria-label="Shokolad va Gullar Boxni buyurtma qilish" class="w-7 h-7 rounded-lg gradient-btn flex items-center justify-center text-white shadow-md hover:scale-105 transition">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card glass-card glass-card-hover rounded-2xl overflow-hidden transition-all duration-300 group" data-category="roses">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=600&q=80" alt="Pushti atirgullar guldastasi" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <span class="absolute top-2 right-2 bg-slate-900/80 px-2 py-0.5 rounded-md text-[10px] font-bold text-rose-300">NOZIK</span>
+                        </div>
+                        <div class="p-3.5 space-y-2">
+                            <h3 class="text-sm font-semibold text-white">Pushti Orzular</h3>
+                            <p class="text-[11px] text-slate-400">Nozik ranglardagi atirgullar</p>
+                            <div class="flex items-center justify-between pt-1"><span class="text-xs font-bold text-rose-400">380,000 UZS</span><button onclick="orderProduct('Pushti Orzular', '380,000 UZS')" aria-label="Pushti Orzularni buyurtma qilish" class="w-7 h-7 rounded-lg gradient-btn text-white"><i class="fa-solid fa-plus text-xs"></i></button></div>
+                        </div>
+                    </div>
+
+                    <div class="product-card glass-card glass-card-hover rounded-2xl overflow-hidden transition-all duration-300 group" data-category="bridal">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80" alt="Oq kelin guldastasi" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        </div>
+                        <div class="p-3.5 space-y-2">
+                            <h3 class="text-sm font-semibold text-white">Oq Nafosat</h3>
+                            <p class="text-[11px] text-slate-400">Kelinlar uchun nafis buket</p>
+                            <div class="flex items-center justify-between pt-1"><span class="text-xs font-bold text-rose-400">500,000 UZS</span><button onclick="orderProduct('Oq Nafosat', '500,000 UZS')" aria-label="Oq Nafosatni buyurtma qilish" class="w-7 h-7 rounded-lg gradient-btn text-white"><i class="fa-solid fa-plus text-xs"></i></button></div>
+                        </div>
+                    </div>
+
+                    <div class="product-card glass-card glass-card-hover rounded-2xl overflow-hidden transition-all duration-300 group" data-category="gifts">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80" alt="Gullar va sovg'a qutisi" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        </div>
+                        <div class="p-3.5 space-y-2">
+                            <h3 class="text-sm font-semibold text-white">Mehrli Sovg‘a</h3>
+                            <p class="text-[11px] text-slate-400">Gul va sovg‘a uchun to‘plam</p>
+                            <div class="flex items-center justify-between pt-1"><span class="text-xs font-bold text-rose-400">320,000 UZS</span><button onclick="orderProduct('Mehrli Sovg‘a', '320,000 UZS')" aria-label="Mehrli Sovg‘ani buyurtma qilish" class="w-7 h-7 rounded-lg gradient-btn text-white"><i class="fa-solid fa-plus text-xs"></i></button></div>
+                        </div>
+                    </div>
+
+                </div>
+                <p id="noProducts" class="hidden text-center text-sm text-slate-400 py-8">Bu qidiruv bo‘yicha mahsulot topilmadi.</p>
+            </section>
+
+            <section id="about" class="grid md:grid-cols-2 gap-6 items-center">
+                <div class="rounded-3xl overflow-hidden h-64 md:h-80 border border-white/10">
+                    <img src="https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=85" alt="Guldasta tayyorlayotgan florist" loading="lazy" class="w-full h-full object-cover">
+                </div>
+                <div class="glass-card rounded-3xl p-6 md:p-8">
+                    <p class="text-xs uppercase tracking-[0.2em] text-rose-400 mb-2">Melfis Flowers</p>
+                    <h2 class="serif-title text-2xl md:text-3xl font-bold text-white">Gullar orqali mehr ulashing</h2>
+                    <p class="text-sm text-slate-300 leading-relaxed mt-4">Har bir guldastani bayram, uchrashuv yoki shunchaki quvonch ulashish uchun tanlashingiz mumkin. Siz istagan rang va uslubni buyurtma paytida bizga ayting.</p>
+                    <ul class="mt-5 space-y-3 text-xs text-slate-300">
+                        <li><i class="fa-solid fa-check text-rose-400 mr-2"></i> Did bilan bezatilgan guldastalar</li>
+                        <li><i class="fa-solid fa-check text-rose-400 mr-2"></i> Buyurtmaga tabriknoma qo‘shish imkoniyati</li>
+                        <li><i class="fa-solid fa-check text-rose-400 mr-2"></i> Samarqand bo‘ylab yetkazib berish</li>
+                    </ul>
+                    <a href="https://t.me/Melfis_flowers" target="_blank" rel="noopener noreferrer" class="inline-flex mt-6 gradient-btn px-4 py-2.5 rounded-xl text-xs font-semibold text-white">Maslahat olish <i class="fa-brands fa-telegram ml-2"></i></a>
+                </div>
+            </section>
+
+            <section class="space-y-5">
+                <div class="text-center">
+                    <p class="text-xs uppercase tracking-[0.2em] text-rose-400 mb-2">Oddiy va qulay</p>
+                    <h2 class="serif-title text-2xl md:text-3xl font-bold text-white">Buyurtma berish tartibi</h2>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-2xl p-5"><span class="text-rose-400 text-2xl font-bold">01</span><h3 class="text-white font-semibold mt-3">Guldastani tanlang</h3><p class="text-xs text-slate-400 mt-2">Katalogdan yoqqan buketingizni toping.</p></div>
+                    <div class="glass-card rounded-2xl p-5"><span class="text-rose-400 text-2xl font-bold">02</span><h3 class="text-white font-semibold mt-3">Ma’lumot qoldiring</h3><p class="text-xs text-slate-400 mt-2">Ism va telefon raqamingizni kiriting.</p></div>
+                    <div class="glass-card rounded-2xl p-5"><span class="text-rose-400 text-2xl font-bold">03</span><h3 class="text-white font-semibold mt-3">Buyurtmani tasdiqlang</h3><p class="text-xs text-slate-400 mt-2">Telegram orqali bog‘lanib, yetkazishni kelishib oling.</p></div>
+                </div>
+            </section>
+
+            <section id="reviews" class="glass-card rounded-3xl p-6 md:p-8 bg-gradient-to-br from-rose-950/30 to-slate-950/30">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-rose-400 mb-2">Savolingiz bormi?</p>
+                        <h2 class="serif-title text-2xl font-bold text-white">Sizga mos guldastani birga tanlaymiz</h2>
+                        <p class="text-sm text-slate-300 mt-2">Narx, rang yoki yetkazib berish haqida Telegram orqali so‘rang.</p>
+                    </div>
+                    <a href="https://t.me/Melfis_flowers" target="_blank" rel="noopener noreferrer" class="shrink-0 gradient-btn px-5 py-3 rounded-xl text-sm font-semibold text-white text-center"><i class="fa-brands fa-telegram mr-2"></i>Telegramda yozish</a>
+                </div>
+            </section>
+
+            <section id="faq" class="space-y-4">
+                <h2 class="serif-title text-2xl font-bold text-white">Ko‘p so‘raladigan savollar</h2>
+                <details class="glass-card rounded-xl p-4 group">
+                    <summary class="cursor-pointer text-sm font-semibold text-white list-none flex justify-between">Qanday buyurtma beraman?<i class="fa-solid fa-plus text-rose-400 group-open:rotate-45 transition"></i></summary>
+                    <p class="text-xs text-slate-400 mt-3">Katalogdan mahsulot tanlang, buyurtma formasini to‘ldiring va Telegram orqali yuboring.</p>
+                </details>
+                <details class="glass-card rounded-xl p-4 group">
+                    <summary class="cursor-pointer text-sm font-semibold text-white list-none flex justify-between">Yetkazib berish manzilini qanday aytaman?<i class="fa-solid fa-plus text-rose-400 group-open:rotate-45 transition"></i></summary>
+                    <p class="text-xs text-slate-400 mt-3">Buyurtma yuborilgach, Telegram chatda manzil va qulay vaqtni kelishib olishingiz mumkin.</p>
+                </details>
+                <details class="glass-card rounded-xl p-4 group">
+                    <summary class="cursor-pointer text-sm font-semibold text-white list-none flex justify-between">Guldastaga tabriknoma qo‘shsa bo‘ladimi?<i class="fa-solid fa-plus text-rose-400 group-open:rotate-45 transition"></i></summary>
+                    <p class="text-xs text-slate-400 mt-3">Ha, buyurtma vaqtida tabriknoma istagingizni yozib qoldiring.</p>
+                </details>
+            </section>
+
+        </main>
+
+        <!-- Footer Info -->
+        <footer id="contact" class="p-6 md:p-8 border-t border-white/5 backdrop-blur-md bg-slate-950/90">
+            <div class="max-w-6xl mx-auto grid sm:grid-cols-3 gap-6 text-center sm:text-left">
+                <div><p class="font-bold text-white">MELFIS <span class="text-rose-400">FLOWERS</span></p><p class="text-xs text-slate-500 mt-2">Samarqandda nafis gullar va sovg‘alar.</p></div>
+                <div><p class="text-xs font-semibold text-white mb-2">Biz bilan bog‘laning</p><a href="tel:+998700390719" class="block text-xs text-slate-400 hover:text-rose-300">+998 (70) 039-07-19</a><p class="text-xs text-slate-500 mt-1">Samarqand, Pavarot chorrahasi</p></div>
+                <div class="flex justify-center sm:justify-end gap-3"><a href="https://t.me/Melfis_flowers" target="_blank" rel="noopener noreferrer" aria-label="Telegram" class="w-9 h-9 glass-card rounded-full flex items-center justify-center text-sky-300"><i class="fa-brands fa-telegram"></i></a><a href="https://instagram.com/samarqand.melfisflowers" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-9 h-9 glass-card rounded-full flex items-center justify-center text-pink-300"><i class="fa-brands fa-instagram"></i></a></div>
+            </div>
+            <p class="max-w-6xl mx-auto text-center text-[11px] text-slate-600 mt-6">© 2026 MELFIS FLOWERS SAMARQAND. Barcha huquqlar himoyalangan.</p>
+        </footer>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-card w-full max-w-sm rounded-3xl p-6 border border-rose-500/30 relative animate-fade-in">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h3 class="text-lg font-bold text-white serif-title mb-1">Buyurtmani rasmiylashtirish</h3>
+            <p id="modalProductName" class="text-xs text-rose-400 font-medium mb-4"></p>
+
+            <form onsubmit="submitOrder(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Ismingiz</label>
+                    <input type="text" id="custName" required placeholder="Masalan: Azizbek" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Telefon raqamingiz</label>
+                    <input type="tel" id="custPhone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500">
+                </div>
+                <button type="submit" class="w-full gradient-btn py-3 rounded-xl font-bold text-xs text-white shadow-lg shadow-rose-500/30 hover:opacity-95 transition mt-2">
+                    Telegram orqali tasdiqlash
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Three.js Anti-Gravity Engine Script -->
+    <script>
+        let scene, camera, renderer, petals = [];
+        let mouseX = 0, mouseY = 0;
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            
+            // 1. Scene setup
+            scene = new THREE.Scene();
+
+            // 2. Camera setup
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // 3. Renderer setup
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // 4. Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xf472b6, 2, 50);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+
+            // 5. Create 3D Rose Petals Particles (Anti-Gravity Mesh)
+            const petalGeometry = new THREE.SphereGeometry(0.6, 8, 8);
+            petalGeometry.scale(1, 0.2, 1.5); // Flatten into petal shape
+
+            const colors = [0xf472b6, 0xf43f5e, 0xfb7185, 0xffe4e6];
+
+            for (let i = 0; i < 45; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    roughness: 0.4,
+                    metalness: 0.1,
+                    transparent: true,
+                    opacity: 0.85
+                });
+
+                const petal = new THREE.Mesh(petalGeometry, material);
+                
+                // Random position in 3D space
+                petal.position.x = (Math.random() - 0.5) * 40;
+                petal.position.y = (Math.random() - 0.5) * 40;
+                petal.position.z = (Math.random() - 0.5) * 20;
+
+                // Random rotation
+                petal.rotation.x = Math.random() * Math.PI;
+                petal.rotation.y = Math.random() * Math.PI;
+
+                // Anti-gravity float velocities
+                petal.userData = {
+                    vy: 0.01 + Math.random() * 0.02, // Upward floating speed
+                    vx: (Math.random() - 0.5) * 0.01,
+                    rotSpeedX: (Math.random() - 0.5) * 0.02,
+                    rotSpeedY: (Math.random() - 0.5) * 0.02
+                };
+
+                petals.push(petal);
+                scene.add(petal);
+            }
+
+            // Window resize handler
+            window.addEventListener('resize', onWindowResize);
+            
+            // Mouse / Touch movement tracking for gravity disturbance
+            window.addEventListener('pointermove', onPointerMove);
+
+            animate();
+        }
+
+        function onPointerMove(event) {
+            mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = -(event.clientY / window.innerHeight - 0.5) * 2;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate each petal with zero-gravity float logic
+            petals.forEach(petal => {
+                petal.position.y += petal.userData.vy;
+                petal.position.x += petal.userData.vx + mouseX * 0.01;
+                
+                petal.rotation.x += petal.userData.rotSpeedX;
+                petal.rotation.y += petal.userData.rotSpeedY;
+
+                // Reset position when floating out of view (Looping)
+                if (petal.position.y > 25) {
+                    petal.position.y = -25;
+                    petal.position.x = (Math.random() - 0.5) * 40;
+                }
+            });
+
+            // Gentle camera movement according to mouse
+            camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 2 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Modal Order Handlers
+        let selectedProduct = '';
+        let selectedPrice = '';
+
+        function orderProduct(name, price) {
+            selectedProduct = name;
+            selectedPrice = price;
+            document.getElementById('modalProductName').innerText = `${name} (${price})`;
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+        }
+
+        function submitOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            
+            const text = `Assalomu alaykum! Men veb-ilovangiz orqali buyurtma bermoqchiman:\n\n💐 Mahsulot: ${selectedProduct}\n💰 Narxi: ${selectedPrice}\n👤 Mijoz: ${name}\n📞 Telefon: ${phone}`;
+            
+            window.open(`https://t.me/Melfis_flowers?text=${encodeURIComponent(text)}`, '_blank');
+            closeModal();
+        }
+
+        let activeCategory = 'all';
+
+        function filterProducts() {
+            const query = document.getElementById('productSearch').value.trim().toLocaleLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            let visibleCount = 0;
+
+            products.forEach(product => {
+                const matchesCategory = activeCategory === 'all' || product.dataset.category === activeCategory;
+                const matchesSearch = product.innerText.toLocaleLowerCase().includes(query);
+                product.hidden = !matchesCategory || !matchesSearch;
+                if (!product.hidden) visibleCount++;
+            });
+
+            document.getElementById('noProducts').classList.toggle('hidden', visibleCount > 0);
+        }
+
+        document.querySelectorAll('.category-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                activeCategory = button.dataset.category;
+                document.querySelectorAll('.category-filter').forEach(filter => {
+                    filter.classList.remove('bg-rose-500', 'text-white', 'font-semibold');
+                    filter.classList.add('glass-card', 'text-slate-300');
+                });
+                button.classList.add('bg-rose-500', 'text-white', 'font-semibold');
+                button.classList.remove('glass-card', 'text-slate-300');
+                filterProducts();
+            });
+        });
+
+        document.getElementById('productSearch').addEventListener('input', filterProducts);
+
+        // Initialize Three.js scene on load
+        window.addEventListener('DOMContentLoaded', initThreeJS);
+    </script>
+</body>
+</html>
